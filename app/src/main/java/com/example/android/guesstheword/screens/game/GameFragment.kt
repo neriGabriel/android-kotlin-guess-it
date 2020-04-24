@@ -35,47 +35,83 @@ import com.example.android.guesstheword.databinding.GameFragmentBinding
  */
 class GameFragment : Fragment() {
 
+    /*
+        CRIAMOS DOIS ATRIBUTOS DO TIPO LATEINIT
+        LATEINIT -> CONHECIDO COMO INICIALIZAÇÃO ATRASADA, A PARTIR DELA PODEMOS DECLARAR
+        PROPERTIES SIMILARES A ATRIBUTOS POREM SEM INICIALIZAÇÃO
+        LEMBRANDO QUE OS ATRIBUTOS DO TIPO LATEINIT PRECISAM SER INICIALIZADOS ANTES DO SEU USO
+        SEÃO CRASHARAM A APLICAÇÃO.
+    */
+    /*
+        VARIAVEL DE REFERENCIA AO VIEWMODEL DO TIPO GAMEVIEWMODEL
+     */
     private lateinit var viewModel: GameViewModel
 
+    /*
+        VARIAVEL DE REFERENCIA AO BINDING DO FRAGMENT DO TIPO GAMEFRAGMENTBINDING
+     */
     private lateinit var binding: GameFragmentBinding
 
+
+    /*
+        SOBREESCREVO A FUNÇÃO ONCREATEVIEW QUE SERÁ EXECUTADA NO LIFFECYCLE E RECEBERÁ VIA PARAMETRO
+        UM LAYOUT PARA INFLAR DO TIPO LAYOUTINFLATER, UM CONTAINER DO TIPO VIEWGROUP E A INSTANCIA DO ESTADO
+        DO TIPO BUNDLE
+    */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        // Inflate view and obtain an instance of the binding class
+        /*
+            INFLO A VIEW E OBTENHO A INSTANCIA DA CLASSE DE BINDING
+         */
         binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.game_fragment,
                 container,
                 false
         )
-
-
-        //REFERENCIO A VIEWMODEL
+        /*
+            REFERENCIO A VIEWMODEL ANTES DE SUA UTILIZAÇÃO COM UM VIEWMODELPROVIDER
+            E REFERENCIO O ARQUIVO GAMEVIEWMODEL::CLASS.JAVA
+        */
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
 
 
+        /*
+            SETO ATRAVÉS DO BINDING DA VIEW PARA O BOTÃO CORRECT O ONCLICKLISTENER
+            CHAMANDO A FUNÇÃO ONCORRECT LOCALIZADA DENTRO DO VIEWMODEL E ATUALIZO A PALAVRA
+        */
         binding.correctButton.setOnClickListener {
             viewModel.onCorrect()
             updateWordText()
         }
+
+        /*
+           SETO ATRAVÉS DO BINDING DA VIEW PARA O BOTÃO SKIP O ONCLICKLISTENER
+           CHAMANDO A FUNÇÃO ONSKIP LOCALIZADA DENTRO DO VIEWMODEL E ATUALIZO A PALAVRA
+        */
         binding.skipButton.setOnClickListener {
             viewModel.onSkip()
             updateWordText()
         }
-        //SETANDO O OBSERVE
-        //ENTÃO NÃO PRECISAREI TER UM MÉTODO SEPARADO PARA ATUALIZAR O SCORE
-        //SEMPRE QUE ATUALIZAR O VALOR DO SCORE NA VIEWMODEL ESSE OBSERVE ATUALIZARA A NOSSA VIEW
-        //AUTOMATICAMENTE
-        //ISTO SÓ É POSSIVEL PORQUE NO ATRIBUTO DA VIEWMODEL EU SETO COMO DO TIPO LIVEDATA
+
+        /*
+            SETANDO O OBSERVE
+            ENTÃO NÃO PRECISAREI TER UM MÉTODO SEPARADO PARA ATUALIZAR O SCORE
+            SEMPRE QUE ATUALIZAR O VALOR DO SCORE NA VIEWMODEL ESSE OBSERVE ATUALIZARA A NOSSA VIEW
+            AUTOMATICAMENTE
+            ISTO SÓ É POSSIVEL PORQUE NO ATRIBUTO DA VIEWMODEL EU SETO COMO DO TIPO LIVEDATA
+        */
         viewModel.score.observe(this, Observer { newScore ->
             binding.scoreText.text = newScore.toString()
         })
 
-        //SETANDO O OBSERVE
-        //PARA QUANDO O VALOR DO ATRIBUTO INTERNO EVENTGAMEFINIS FOR ALTERADO E SEU VALOR FOR TRUE
-        //PRINTAR UM TOASTER NA TELA, FINALIZAR O GAME
-        //E ALTERAR NOVAMENTE O ATRIBUTO DO VIEWMODEL
+        /*
+            SETANDO O OBSERVE
+            PARA QUANDO O VALOR DO ATRIBUTO INTERNO EVENTGAMEFINISH FOR ALTERADO E SEU VALOR FOR TRUE
+            PRINTAR UM TOASTER NA TELA, FINALIZAR O GAME
+            E ALTERAR NOVAMENTE O ATRIBUTO DO VIEWMODEL
+        */
         viewModel.eventGameFinish.observe(this, Observer { hasFinished ->
                 if(hasFinished) {
                     gameFinished()
@@ -85,22 +121,38 @@ class GameFragment : Fragment() {
 
         updateWordText()
 
+        /*
+            RETORNO O BINDIG.ROOT
+         */
         return binding.root
 
     }
 
-    /**
-     * Called when the game is finished
-     */
+    /*
+        FUNÇÃO CHAMDA QUANDO O GAME É FINALIZADO
+    */
     private fun gameFinished() {
+        /*
+            CRIO UM ALERTA LEVE QUANDO O GAME É FINALIZADO PASSANDO POR PARAMETRO A VIEW ONDE ESSE ALERTA SERÁ
+            EXIBIDO, UMA MENSAGEM E O TEMPO EM QUE O ALERTA FICARÁ NA TELA E DOU UM .SHOW() PARA EXIBIR O ALERTA
+        */
         Toast.makeText(this.activity, "Game has finished", Toast.LENGTH_SHORT).show()
 
+        /*
+           CRIO UMA VARIAVEL COM O VALOR DOS PONTOS E 'ENCAPSULO' PARA ENVIAR PARA O FRAGMENT ANTERIOR
+        */
         val action = GameFragmentDirections.actionGameToScore(viewModel.score.value ?: 0)
+
+        /*
+            CHAMO O FRAGMENT ANTERIOR PASSANDO A VARIAVEL
+        */
         findNavController(this).navigate(action)
     }
 
-    /** Methods for updating the UI **/
 
+    /*
+        FUNÇÃO PARA ATUALIZAR O TEXTO
+    */
     fun updateWordText() {
         binding.wordText.text = viewModel.word.value
 
