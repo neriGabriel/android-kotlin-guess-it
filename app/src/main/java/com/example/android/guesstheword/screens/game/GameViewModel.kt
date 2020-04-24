@@ -105,7 +105,7 @@ class GameViewModel: ViewModel() {
         _eventGameFinish.value = false;
 
         /*
-            STARTO MEU TIMER
+            CONFIGURO MEU TIMER
             E SOBREESCREVO A FUNÇÃO ONTICK QUE SERÁ EXECUTADA A CADA TICKADA
             SETANDO UM VALOR DE TEMPO
 
@@ -123,6 +123,9 @@ class GameViewModel: ViewModel() {
                 _eventGameFinish.value = true
             }
         }
+        /*
+            STARTO O TIMER
+        */
         timer.start()
 
 
