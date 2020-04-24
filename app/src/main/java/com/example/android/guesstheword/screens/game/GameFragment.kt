@@ -17,9 +17,11 @@
 package com.example.android.guesstheword.screens.game
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -70,6 +72,17 @@ class GameFragment : Fragment() {
             binding.scoreText.text = newScore.toString()
         })
 
+        //SETANDO O OBSERVE
+        //PARA QUANDO O VALOR DO ATRIBUTO INTERNO EVENTGAMEFINIS FOR ALTERADO E SEU VALOR FOR TRUE
+        //PRINTAR UM TOASTER NA TELA, FINALIZAR O GAME
+        //E ALTERAR NOVAMENTE O ATRIBUTO DO VIEWMODEL
+        viewModel.eventGameFinish.observe(this, Observer { hasFinished ->
+                if(hasFinished) {
+                    gameFinished()
+                    viewModel.onGameFinishComplete()
+                }
+        })
+
         updateWordText()
 
         return binding.root
@@ -80,6 +93,8 @@ class GameFragment : Fragment() {
      * Called when the game is finished
      */
     private fun gameFinished() {
+        Toast.makeText(this.activity, "Game has finished", Toast.LENGTH_SHORT).show()
+
         val action = GameFragmentDirections.actionGameToScore(viewModel.score.value ?: 0)
         findNavController(this).navigate(action)
     }
@@ -87,7 +102,7 @@ class GameFragment : Fragment() {
     /** Methods for updating the UI **/
 
     fun updateWordText() {
-        binding.wordText.text = viewModel.word
+        binding.wordText.text = viewModel.word.value
 
     }
 
