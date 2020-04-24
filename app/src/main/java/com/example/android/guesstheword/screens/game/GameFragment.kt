@@ -108,6 +108,13 @@ class GameFragment : Fragment() {
         })
 
 
+        /*
+           SETANDO O OBSERVE
+           ENTÃO NÃO PRECISAREI TER UM MÉTODO SEPARADO PARA ATUALIZAR O time
+           ESTE OBSERVE FICARA DE 'OLHO' NAS ALTERAÇÕES DO ATRIBUTO TIME
+           SEMPRE QUE FOR ALTERADO ALTERARA AQUI
+           A FUNÇÃO DATEUTILS.FORMATELAPSEDTIME CONVERTE O TEMPO QUE VEM DESFORMATADO
+       */
         viewModel.time.observe(this, Observer { newTime ->
             //Log.i("GameFragment", newTime.toString());
             binding.timerText.text = DateUtils.formatElapsedTime(newTime)

@@ -8,6 +8,12 @@ import androidx.lifecycle.ViewModel
 
 class GameViewModel: ViewModel() {
 
+    /*
+        CRIO UM COMPANION OBJECT PARA O TIMER COM
+        O TEMPO DE DONE
+        ONE_SECOND
+        COUNTDOWN_TIME
+    */
     companion object {
         // These represent different important times
         // This is when the game is over
@@ -18,8 +24,18 @@ class GameViewModel: ViewModel() {
         const val COUNTDOWN_TIME = 10000L
     }
 
+    /*
+        CRIO UM ATRIBUTO DO TIPO COUNTDOWNTIMER QUE RECEBERÁ MEU TIMER POSTERIORMENTE
+    */
     private val timer: CountDownTimer
 
+    /*
+        CRIO UM ATRIBUTO INTERNO PARA A VIEW NÃO TER ACESSO DIRETAMENTE A ELE
+        E DEPOIS UM ATRIBUTO PUBLICO PARA LIBERAR ESTE ACESSO
+        REFERENCIA AO GET E SET
+
+        ESTE ATRIBUTO TEM COMO VALOR UM MUTABLELIVEDATA DO TIPO LONG
+    */
     private val _time =  MutableLiveData<Long>()
     val time: LiveData<Long>
         get() = _time
@@ -88,6 +104,14 @@ class GameViewModel: ViewModel() {
         _score.value = 0;
         _eventGameFinish.value = false;
 
+        /*
+            STARTO MEU TIMER
+            E SOBREESCREVO A FUNÇÃO ONTICK QUE SERÁ EXECUTADA A CADA TICKADA
+            SETANDO UM VALOR DE TEMPO
+
+            E SOBREESCREVO A FUNÇÃO ONFINISH QUE SERÁ EXECUTADA QUANDO FINALIZAR
+            O TIMER RESETANDO O VALOR DO TIMER E FINALIZANDO O GAME
+        */
         timer = object : CountDownTimer(COUNTDOWN_TIME, ONE_SECOND) {
 
             override fun onTick(millisUntilFinished: Long) {
@@ -154,7 +178,7 @@ class GameViewModel: ViewModel() {
 
     /*
         PROCURO A PROXIMA PALAVARA VERIFICANDO SE A LISTA DE PALAVRAS ESTÁ VAZIA
-        SE SIM ATUALIZO O VALOR DO ATRIBUTO EVENTGAMEFINISH PARA TRUE SIGNIFICANDO QUE O JOGO FOI FINALIZADO
+        SE REINICIO A LISTA
         SENÃO SETO A PROXIMA PALAVRA COMO O PRIMEIRO INDICE DO WORDLIST
         REMOVENDO A PALAVRA DO WORDLIST
     */
@@ -164,7 +188,6 @@ class GameViewModel: ViewModel() {
             resetList()
         }
         _word.value = wordList.removeAt(0)
-
     }
 
     /*
