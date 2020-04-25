@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.android.guesstheword.R
@@ -31,6 +32,14 @@ import com.example.android.guesstheword.databinding.ScoreFragmentBinding
  * Fragment where the final score is shown, after the game is over
  */
 class ScoreFragment : Fragment() {
+
+    /*
+        CRIO DUAS VARIAVEL DE VIEWMODEL E VIEWMODELFACTORY COM INICIAZAÇÃO LENTA
+        E DEPOIS ATRIBUO SEUS VALORES
+    */
+    private lateinit var viewModel: ScoreViewModel
+    private lateinit var viewModelFactory: ScoreViewModelFactory
+
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -46,8 +55,24 @@ class ScoreFragment : Fragment() {
                 false
         )
 
+
+
         // Get args using by navArgs property delegate
         val scoreFragmentArgs by navArgs<ScoreFragmentArgs>()
+
+        /*
+            ATRIBUO OS VALORES DA FACTORY E PASSO OS PARAMETROS
+        */
+        viewModelFactory = ScoreViewModelFactory(scoreFragmentArgs.score)
+
+        /*
+            ATRIBUO OS VALORES DA VIEWMODEL PORÉM COM A DIFERENÇA QUE NO MÉTODO
+            .OF DEFINO COMO SEGUNDO PARAMETRO A MINHA FACTORY, SENDO ASSIM
+            CRIARA COM PARAMETROS A MINHA VIEWMODEL SEM A NECESSIDADE DE SETTAR OS GETTERS E SETTERS
+        */
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+                                      .get(ScoreViewModel::class.java)
+
         binding.scoreText.text = scoreFragmentArgs.score.toString()
         binding.playAgainButton.setOnClickListener { onPlayAgain() }
 
