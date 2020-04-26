@@ -77,24 +77,37 @@ class GameFragment : Fragment() {
         */
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
 
-
+        /*
+            A VARIAVEL BIND CONTÉM TODOS OS ELEMENTOS DA VIEW/FRAGMENT (DATABINDING -> LIGAR DIRETAMENTE A VIEW AO VIEWMODEL)
+            SENDO ASSIM CONSIGO ASSOCIAR UMA VARIAVEL CRIADA NA VIEW/FRAGMENT E UTILIZA-LA
+            O QUE FAÇO AQUI É FAZER ESSA ASSOCIAÇÃO
+        */
+        binding.gameViewModel = viewModel
         /*
             SETO ATRAVÉS DO BINDING DA VIEW PARA O BOTÃO CORRECT O ONCLICKLISTENER
             CHAMANDO A FUNÇÃO ONCORRECT LOCALIZADA DENTRO DO VIEWMODEL E ATUALIZO A PALAVRA
         */
-        binding.correctButton.setOnClickListener {
+
+        /*
+          NOS BOTÕES DA VIEW/FRAGMENT ASSOCIEI DIRETO A FUNÇÃO ENTÃO NÃO PRECISO FAZER ESSA ASSOCIAÇÃO AQUI
+       */
+        /*binding.correctButton.setOnClickListener {
             viewModel.onCorrect()
             updateWordText()
-        }
+        }*/
 
+
+        /*
+          NOS BOTÕES DA VIEW/FRAGMENT ASSOCIEI DIRETO A FUNÇÃO ENTÃO NÃO PRECISO FAZER ESSA ASSOCIAÇÃO AQUI
+       */
         /*
            SETO ATRAVÉS DO BINDING DA VIEW PARA O BOTÃO SKIP O ONCLICKLISTENER
            CHAMANDO A FUNÇÃO ONSKIP LOCALIZADA DENTRO DO VIEWMODEL E ATUALIZO A PALAVRA
         */
-        binding.skipButton.setOnClickListener {
+        /*binding.skipButton.setOnClickListener {
             viewModel.onSkip()
             updateWordText()
-        }
+        }*/
 
         /*
             SETANDO O OBSERVE
@@ -107,6 +120,9 @@ class GameFragment : Fragment() {
             binding.scoreText.text = newScore.toString()
         })
 
+        viewModel.word.observe(this, Observer { newWord ->
+            binding.wordText.text = newWord.toString()
+        })
 
         /*
            SETANDO O OBSERVE
