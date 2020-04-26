@@ -79,10 +79,17 @@ class ScoreFragment : Fragment() {
 
         binding.scoreViewModel = viewModel
 
+
+        /*
+            SETO COMO LIFECYCLE OWNER ESSE BINDING, ASSIM NA FRAGMENT TENHO ACESSO AS PROPRIEDADES
+            E NÃO PRECISO FICAR CRIANDO UM MONTE DE LAMBDA OBSRVEBLE
+        */
+        binding.setLifecycleOwner(this)
+
         // Add observer for score
-        viewModel.score.observe(this, Observer { newScore ->
+        /*viewModel.score.observe(this, Observer { newScore ->
             binding.scoreText.text = newScore.toString()
-        })
+        })*/
 
         // Navigates back to title when button is pressed
         viewModel.eventPlayAgain.observe(this, Observer { playAgain ->

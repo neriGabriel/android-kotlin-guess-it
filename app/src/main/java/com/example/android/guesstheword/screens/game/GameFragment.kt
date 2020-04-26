@@ -83,6 +83,13 @@ class GameFragment : Fragment() {
             O QUE FAÇO AQUI É FAZER ESSA ASSOCIAÇÃO
         */
         binding.gameViewModel = viewModel
+
+        /*
+            SETO COMO LIFECYCLE OWNER ESSE BINDING, ASSIM NA FRAGMENT TENHO ACESSO AS PROPRIEDADES
+            E NÃO PRECISO FICAR CRIANDO UM MONTE DE LAMBDA OBSRVEBLE
+        */
+        binding.setLifecycleOwner(this)
+
         /*
             SETO ATRAVÉS DO BINDING DA VIEW PARA O BOTÃO CORRECT O ONCLICKLISTENER
             CHAMANDO A FUNÇÃO ONCORRECT LOCALIZADA DENTRO DO VIEWMODEL E ATUALIZO A PALAVRA
@@ -116,13 +123,13 @@ class GameFragment : Fragment() {
             AUTOMATICAMENTE
             ISTO SÓ É POSSIVEL PORQUE NO ATRIBUTO DA VIEWMODEL EU SETO COMO DO TIPO LIVEDATA
         */
-        viewModel.score.observe(this, Observer { newScore ->
+       /* viewModel.score.observe(this, Observer { newScore ->
             binding.scoreText.text = newScore.toString()
-        })
+        })*/
 
-        viewModel.word.observe(this, Observer { newWord ->
+        /*viewModel.word.observe(this, Observer { newWord ->
             binding.wordText.text = newWord.toString()
-        })
+        })*/
 
         /*
            SETANDO O OBSERVE
@@ -131,10 +138,10 @@ class GameFragment : Fragment() {
            SEMPRE QUE FOR ALTERADO ALTERARA AQUI
            A FUNÇÃO DATEUTILS.FORMATELAPSEDTIME CONVERTE O TEMPO QUE VEM DESFORMATADO
        */
-        viewModel.time.observe(this, Observer { newTime ->
-            //Log.i("GameFragment", newTime.toString());
+        /*viewModel.time.observe(this, Observer { newTime ->
             binding.timerText.text = DateUtils.formatElapsedTime(newTime)
-        })
+        })*/
+
         /*
             SETANDO O OBSERVE
             PARA QUANDO O VALOR DO ATRIBUTO INTERNO EVENTGAMEFINISH FOR ALTERADO E SEU VALOR FOR TRUE

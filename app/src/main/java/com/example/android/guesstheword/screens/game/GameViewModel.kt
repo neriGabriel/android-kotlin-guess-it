@@ -1,9 +1,11 @@
 package com.example.android.guesstheword.screens.game
 
 import android.os.CountDownTimer
+import android.text.format.DateUtils
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 
 class GameViewModel: ViewModel() {
@@ -39,6 +41,16 @@ class GameViewModel: ViewModel() {
     private val _time =  MutableLiveData<Long>()
     val time: LiveData<Long>
         get() = _time
+
+    /*
+        O LIVEDATA NÃO PERMITE MUITAS FUNÇÃO DIRETO NO FRAGMENT OU ACTIVITY
+        ENTÃO PRECISAMOS CRIAR AQUI NA VIEW MODEL UM OBJETO QUE IRÁ FAZER
+        A CONVERSÃO PRA NÓS DO JEITO NECESSÁRIO E DEPOIS NA VIEWMODEL ACESSAMOS
+        ELA
+    */
+    val currentTimeString = Transformations.map(time, { time ->
+        DateUtils.formatElapsedTime(time)
+    })
 
 
     /*
